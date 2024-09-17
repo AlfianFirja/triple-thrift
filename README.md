@@ -183,8 +183,14 @@ Penyerang dapat memanfaatkan ketiadaan `csrf_token` ini untuk mengirim permintaa
  def show_main(request):
     mood_entries = MoodEntry.objects.all()
     ...
-```
-6. Tambahkan path url ke dalam variabel `urlpatterns` pada `urls.py` agar dapat mengakses fungsi yang telah di-import.
-7. Buat berkas html baru untuk membuat tampilan page untuk menambahkan data (menerima input) dan menambahkan `csrf_token` sebagai security seperti yang telah dijelaskan tadi.
-8. Buka `views.py` dan tambahkan fungsi `show_xml`, `show_json`, `show_xml_by_id`, `show_json_by_id` yang berfungsi untuk menampilkan data dengan format XML dan JSON
-9. Jangan lupa tambahin path URL tiap fungsi pada nomer 8
+ ```
+ 6. Tambahkan path url ke dalam variabel `urlpatterns` pada `urls.py` agar dapat mengakses fungsi yang telah di-import.
+ 7. Buat berkas html baru untuk membuat tampilan page untuk menambahkan data (menerima input) dan menambahkan `csrf_token` sebagai security seperti yang telah dijelaskan tadi.
+ 8. Buka `views.py` dan tambahkan fungsi `show_xml`, `show_json`, `show_xml_by_id`, `show_json_by_id` yang berfungsi untuk menampilkan data dengan format XML dan JSON
+ 9. Jangan lupa tambahin path URL tiap fungsi pada nomer 8
+
+ ### 6. Screenshot Postman
+
+ ![XML Alfian Tugas 3](/postmanXML.png)
+
+ ![JSON Alfian Tugas 3](/postmanJSON.png)
