@@ -190,7 +190,14 @@ Penyerang dapat memanfaatkan ketiadaan `csrf_token` ini untuk mengirim permintaa
  9. Jangan lupa tambahin path URL tiap fungsi pada nomer 8
 
  ### 6. Screenshot Postman
-
+ XML
  ![XML Alfian Tugas 3](/postmanXML.png)
 
+ JSON
  ![JSON Alfian Tugas 3](/postmanJSON.png)
+
+ XML_by_ID
+![JSON Alfian Tugas 3](/postmanXML_by_ID.png)
+
+ JSON_by_ID
+ ![JSON Alfian Tugas 3](/postmanJSON_by_ID.png)
