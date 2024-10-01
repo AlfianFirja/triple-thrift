@@ -420,3 +420,129 @@ menggunakan `ForeignKey` untuk membuat relasi dengan model `User`. `ForeignKey` 
 
 ---
 
+### 1. Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!
+
+Urutan prioritas CSS selector ditentukan oleh spesifisitas dan urutan di mana aturan diterapkan. Berikut adalah urutan prioritas dari tertinggi ke terendah:
+
+1. **Inline Styles**: CSS yang ditambahkan langsung di elemen HTML menggunakan atribut `style`. Misalnya:
+   ```html
+   <div style="color: red;">Hello</div>
+   ```
+
+2. **IDs**: Selector dengan ID (misalnya `#myId`). Selector ini memiliki spesifisitas lebih tinggi daripada class atau tag.
+   ```css
+   #myId {
+       color: blue;
+   }
+   ```
+
+3. **Classes, Pseudo-Classes, dan Attributes**: Selector ini mencakup class (`.myClass`), pseudo-class (`:hover`), dan attribute selector (`[type="text"]`).
+   ```css
+   .myClass {
+       color: green;
+   }
+   ```
+
+4. **Elements (Tag) dan Pseudo-Elements**: Selector ini mencakup elemen HTML seperti `div`, `p`, dan pseudo-element seperti `::before`.
+   ```css
+   p {
+       color: black;
+   }
+   ```
+
+5. **Universal Selector**: Selector yang mencakup semua elemen (`*`), tetapi memiliki spesifisitas terendah.
+   ```css
+   * {
+       color: gray;
+   }
+   ```
+
+Jika beberapa selector memiliki spesifisitas yang sama, urutan penulisan di dalam stylesheet menentukan aturan mana yang diterapkan, dengan aturan terakhir yang diambil.
+
+### 2. Mengapa responsive design menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan responsive design!
+
+Responsive design adalah pendekatan untuk merancang aplikasi web sehingga tampilan dan fungsi dapat menyesuaikan diri dengan berbagai ukuran layar dan perangkat. Ini penting karena:
+
+- **Pengalaman Pengguna**: Memberikan pengalaman yang baik bagi pengguna di berbagai perangkat, dari desktop hingga smartphone.
+- **SEO**: Mesin pencari seperti Google lebih menyukai situs yang responsif, yang dapat meningkatkan peringkat pencarian.
+- **Efisiensi Pengembangan**: Dengan satu desain untuk semua perangkat, pengembangan dan pemeliharaan menjadi lebih efisien.
+
+**Contoh Aplikasi:**
+- **Sudah menerapkan responsive design**: 
+  - **Twitter**: Memiliki tampilan yang berubah sesuai dengan ukuran layar.
+  - **Wikipedia**: Konten dan elemen navigasi disusun ulang untuk kemudahan penggunaan di perangkat kecil.
+  
+- **Belum menerapkan responsive design**: 
+  - **Gmail**: Saat ukuran layar dikecilkan isi dari tampilannya terpotong.
+
+### 3. Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!
+
+- **Margin**: Ruang di luar batas elemen. Ini memisahkan elemen dari elemen lain. Margin bersifat transparan.
+  ```css
+  .box {
+      margin: 20px; /* Margin 20px di semua sisi */
+  }
+  ```
+
+- **Border**: Garis yang mengelilingi elemen. Border dapat memiliki lebar, warna, dan gaya.
+  ```css
+  .box {
+      border: 2px solid black; /* Border hitam 2px solid */
+  }
+  ```
+
+- **Padding**: Ruang di dalam elemen, antara konten dan batas. Padding tidak transparan dan mempengaruhi ukuran elemen.
+  ```css
+  .box {
+      padding: 10px; /* Padding 10px di semua sisi */
+  }
+  ```
+
+### 4. Jelaskan konsep flex box dan grid layout beserta kegunaannya!
+- **Flexbox**: Flexbox adalah model layout satu dimensi yang digunakan untuk mendistribusikan ruang di antara elemen dalam satu arah (horizontal atau vertikal). Kegunaannya meliputi:
+  - Menyusun item dalam baris atau kolom.
+  - Mengatur ukuran item agar proporsional.
+  - Meningkatkan kontrol atas alur dan penyelarasan item.
+
+  Contoh penggunaan Flexbox:
+  ```css
+  .container {
+      display: flex;
+      justify-content: center; /* Mengatur penyelarasan horizontal */
+      align-items: center; /* Mengatur penyelarasan vertikal */
+  }
+  ```
+   **Kegunaan Flexbox:**
+- **Tata Letak Satu Dimensi**: Digunakan untuk mengatur elemen dalam baris atau kolom.
+- **Penyelarasan dan Distribusi Spasi**: Memudahkan penyelarasan elemen secara horizontal dan vertikal serta mengatur spasi antar elemen.
+- **Fleksibilitas Ukuran Elemen**: Elemen dapat secara otomatis menyesuaikan ukuran sesuai ruang yang tersedia.
+- **Responsif Tanpa Media Queries**: Flexbox dapat menyesuaikan tata letak berdasarkan ukuran layar secara otomatis.
+
+- **Grid Layout**: Grid layout adalah model layout dua dimensi yang memungkinkan penataan elemen dalam baris dan kolom. Kegunaannya meliputi:
+  - Membuat layout kompleks dengan mudah.
+  - Mengatur item di dalam grid secara responsif.
+  - Menyusun elemen dalam struktur yang terorganisir.
+
+  Contoh penggunaan Grid Layout:
+  ```css
+  .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* Membuat 3 kolom yang sama */
+      gap: 10px; /* Jarak antara item grid */
+  }
+  ```
+   **Kegunaan Grid Layout:**
+- **Tata Letak Dua Dimensi**: Mengatur elemen dalam baris dan kolom untuk layout yang lebih kompleks.
+- **Kontrol Lebih pada Posisi Elemen**: Dapat menentukan posisi elemen dengan presisi dalam grid.
+- **Responsif dan Simetris**: Cocok untuk layout simetris dan responsif, dengan kolom dan baris yang fleksibel.
+- **Overlap Elemen**: Memungkinkan elemen saling tumpang tindih dalam layout.
+
+### 5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+**Fungsi untuk menghapus dan mengedit product**
+Buat fungsi baru dalam file `views.py` lalu jangan lupa diimport di `url.py` lalu masukin ke url pattern nya yah jangan lupa.
+
+**Kustomisasi desain HTML yang telah dibuat pada tuga-tugas menggunakan tailwind**
+- 1. kustomisasi login, register, dan tambah product di sesuaikan aja dengan keinginan menggunakan tag tag yang sudah disediakan oleh css
+- 2. Siapkan gambarnya di suatu direktori atau gunakan url dari internet. nanti di letakkan di tempat yang diinginkan
+- 3. Siapkan template untuk tiap card nya, lalu panggil di `main.html`
+- 4. Sediakan file `navbar.html` yang berisikan template untuk navbarnya yang bisa dipanggil di `main.html`. Namun pada tugas ini hanya terdapat tombol logout nya saja, sisanya cuma tulisan.
