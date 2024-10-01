@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect   # Tambahkan import redirect di baris ini
+from django.shortcuts import render, redirect, reverse   # Tambahkan import redirect di baris ini
 from main.forms import ProductForm
 from main.models import ProductEntry
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
@@ -18,7 +18,8 @@ def show_main(request):
 
     context = {
         'name' : request.user.username,
-        'address': 'Jl. Masjid Al-Farouq (Kos Pondok Ananda)',
+        'address' : 'Jl. Masjid Al-Farouq (Kos Pondok Ananda)',
+        'identitas' : 'Alfian / PBP A / 2306212695',
         'entries': product_entries,
         'last_login': request.COOKIES['last_login'],
     }
@@ -38,6 +39,29 @@ def create_product_entry(request):
     
     context = {'form': form}
     return render(request, 'create_product_entry.html', context)
+
+def edit_product(request, id):
+    # Get mood entry berdasarkan id
+    mood = ProductEntry.objects.get(pk = id)
+
+    # Set mood entry sebagai instance dari form
+    form = ProductForm(request.POST or None, instance=mood)
+
+    if form.is_valid() and request.method == "POST":
+        # Simpan form dan kembali ke halaman awal
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_product.html", context)
+
+def delete_product(request, id):
+    # Get mood berdasarkan id
+    product = ProductEntry.objects.get(pk = id)
+    # Hapus mood
+    product.delete()
+    # Kembali ke halaman awal
+    return HttpResponseRedirect(reverse('main:show_main'))
 
 def show_xml(request):
     data = ProductEntry.objects.all()

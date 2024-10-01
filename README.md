@@ -413,3 +413,10 @@ menggunakan `ForeignKey` untuk membuat relasi dengan model `User`. `ForeignKey` 
 **Menampilkan Username:** Setelah pengguna login, tampilkan informasi pengguna yang sedang login (seperti username) di halaman utama. Anda bisa mengakses objek pengguna dari `request.user` untuk menampilkan detailnya.
 
 **Menampilkan Last Login:** Simpan informasi waktu login terakhir pengguna menggunakan cookies atau session. Saat pengguna berhasil login, simpan waktu login terakhir ke dalam session atau cookies dan tampilkan informasi ini di halaman utama.
+
+---
+
+## Tugas 5
+
+---
+
