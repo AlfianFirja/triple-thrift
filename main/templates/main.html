@@ -2,48 +2,236 @@
 {% load static %}
 
 {% block meta %}
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
 <title>Tripl3 Thrift - Retro Edition</title>
+<style>
+    @font-face {
+        font-family: 'VT323';
+        src: url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+    }
+    .retro-font {
+        font-family: 'Courier New', 'VT323', monospace;
+    }
+    .retro-button {
+        background-color: #40E0D0;
+        color: white;
+        font-weight: bold;
+        padding: 8px 16px;
+        border-radius: 12px;
+        text-transform: uppercase;
+        transition: transform 0.3s ease-in-out;
+    }
+    .retro-button:hover {
+        transform: scale(1.05);
+    }
+    .retro-delete-button {
+        background-color: #FF4500;
+    }
+    .retro-card {
+        background: #FFE4E1;
+        border: 2px solid #ff2563;
+        border-radius: 12px;
+        box-shadow: 4px 4px 0px #FF2563;
+    }
+    .retro-card-header {
+        background: #FF2563;
+        color: white;
+        padding: 12px 16px;
+        border-bottom: 2px solid #FF2563;
+    }
+</style>
 {% endblock meta %}
 
 {% block content %}
 {% include 'navbar.html' %}
 <div class="content mt-20">
-<div style="overflow-x:hidden; padding: 24px 32px; min-height: 100vh; background: linear-gradient(180deg, #FFC0CB, #B0E0E6); display: flex; flex-direction: column;">
-  <div style="padding: 8px; margin-bottom: 24px; position: relative;">
-    <div style="display: grid; grid-template-columns: 1fr; gap: 32px; z-index: 30; position: relative; grid-template-columns: repeat(3, 1fr);">
-      {% include "card_info.html" with title='Yang Punya Toko' value=identitas %}
-      {% include "card_info.html" with title='Yang Login' value=user.username %}
-      {% include "card_info.html" with title='Alamat Abang-Abangnya' value=address %}
-    </div>
-    <div style="width: 100%; padding: 0 24px; position: absolute; top: 44px; left: 0; z-index: 20; display: none; background-color: #FFCAD4;" class="md:flex"></div>
-    <div style="height: 100%; width: 100%; padding: 24px 0; position: absolute; top: 0; left: 0; z-index: 20; display: flex; background-color: #FFCAD4;" class="md:hidden"></div>
-  </div>
+    <div style="overflow-x:hidden; padding: 24px 32px; min-height: 100vh; background: linear-gradient(180deg, #FFC0CB, #B0E0E6); display: flex; flex-direction: column;">
+        <!-- Info Cards Section -->
+        <div style="padding: 8px; margin-bottom: 24px; position: relative;">
+            <div style="display: grid; grid-template-columns: 1fr; gap: 32px; z-index: 30; position: relative; grid-template-columns: repeat(3, 1fr);">
+                {% include "card_info.html" with title='Yang Punya Toko' value=identitas %}
+                {% include "card_info.html" with title='Yang Login' value=user.username %}
+                {% include "card_info.html" with title='Alamat Abang-Abangnya' value=address %}
+            </div>
+        </div>
+        
+        <!-- Last Login Section -->
+        <div style="padding: 0 12px; margin-bottom: 16px;">
+            <div style="display: flex; background-color: #FF7F50; padding: 8px 16px; border-radius: 8px; width: fit-content;">
+                <h1 class="retro-font" style="color: #8B0000; text-align: center;">Last Login: {{last_login}}</h1>
+            </div>
+        </div>
+        
+        <!-- Action Buttons Section -->
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
+            <a href="{% url 'main:create_product_entry' %}" class="retro-button mx-4">
+                Add New Product Entry
+            </a>
+            <button class="retro-button" style="background-color: #FF2563;" onclick="showModal();">
+                Add New Product Entry by AJAX
+            </button>
+        </div>
+        
+        <!-- Product Cards Section -->
+        <div id="product_entry_cards"></div>
 
-  
-  <div style="padding: 0 12px; margin-bottom: 16px;">
-    <div style="display: flex; background-color: #FF7F50; padding: 8px 16px; border-radius: 8px; width: fit-content;">
-      <h1 style="color: #8B0000; text-align: center; font-family: 'Courier New', monospace;">Last Login: {{last_login}}</h1>
+        <!-- Modal -->
+        <div id="crudModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 w-full flex items-center justify-center bg-gray-800 bg-opacity-50 overflow-x-hidden overflow-y-auto">
+            <div id="crudModalContent" class="relative retro-card w-5/6 sm:w-3/4 md:w-1/2 lg:w-1/3 mx-4 sm:mx-0 transform scale-95 opacity-0 transition-transform transition-opacity duration-300 ease-out">
+                <!-- Modal header -->
+                <div class="retro-card-header flex items-center justify-between">
+                    <h3 class="text-xl retro-font">
+                        Add New Product Entry
+                    </h3>
+                    <button type="button" class="text-white hover:bg-pink-500 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" id="closeModalBtn" onclick="hideModal()">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="px-6 py-4 space-y-6">
+                    <form id="productForm">
+                        <div class="mb-4">
+                            <label for="product" class="block text-sm retro-font uppercase">Product</label>
+                            <input type="text" id="product" name="product_name" class="mt-1 block w-full border-2 border-pink-400 rounded-md p-2 bg-white retro-font" placeholder="Enter your product" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="description" class="block text-sm retro-font uppercase">Description</label>
+                            <textarea id="description" name="product_description" rows="3" class="mt-1 block w-full h-52 resize-none border-2 border-pink-400 rounded-md p-2 bg-white retro-font" placeholder="Describe your product" required></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="productPrice" class="block text-sm retro-font uppercase">Product Price (max Rp1.000.000)</label>
+                            <input type="number" id="productPrice" name="product_price" min="1000" max="1000000" class="mt-1 block w-full border-2 border-pink-400 rounded-md p-2 bg-white retro-font" required>
+                        </div>
+                    </form>
+                </div>
+                <!-- Modal footer -->
+                <div class="flex justify-end space-x-2 p-6 border-t-2 border-pink-400">
+                    <button type="button" class="retro-button" style="background-color: #808080;" id="cancelButton" onclick="hideModal()">Cancel</button>
+                    <button type="submit" id="submitProductEntry" form="productForm" class="retro-button">Save</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-  
-  <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
-    <a href="{% url 'main:create_product_entry' %}" style="background-color: #40E0D0; color: white; font-weight: bold; padding: 8px 16px; border-radius: 12px; text-transform: uppercase; font-family: 'Courier New', monospace; transition: transform 0.3s ease-in-out;" class="hover:transform hover:scale-105">
-        Add New Product Entry
-    </a>
-  </div>
-  
-  {% if not entries %}
-  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 24rem; padding: 24px;">
-      <img src="{% static 'image/Kosong.png' %}" alt="Sad face" style="width: 128px; height: 128px; margin-bottom: 16px; image-rendering: pixelated;"/>
-      <p style="text-align: center; color: #696969; font-family: 'Courier New', monospace;">Belum ada data product pada Tripl3 Thrift.</p>
-  </div>
-  {% else %}
-  <div style="columns: 1; column-gap: 24px; width: 100%; space-y: 24px;">
-      {% for product_entry in entries %}
-          {% include 'card_product.html' with product_entry=product_entry %}
-      {% endfor %}
-  </div>
 </div>
-  {% endif %}
-</div>
+
+<script>
+async function getProductEntries() {
+    return fetch("{% url 'main:show_json' %}").then((res) => res.json())
+}
+
+async function refreshProductEntries() {
+    document.getElementById("product_entry_cards").innerHTML = "";
+    document.getElementById("product_entry_cards").className = "";
+    const productEntries = await getProductEntries();    
+
+    let htmlString = "";
+    let classNameString = "";
+
+    if (productEntries.length === 0) {
+        classNameString = "flex flex-col items-center justify-center min-h-[24rem] p-6";
+        htmlString = `
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 24rem; padding: 24px;">
+                <img src="{% static 'image/Kosong.png' %}" alt="Empty" style="width: 128px; height: 128px; margin-bottom: 16px; image-rendering: pixelated;"/>
+                <p class="retro-font" style="text-align: center; color: #696969;">Belum ada data product pada Tripl3 Thrift.</p>
+            </div>
+        `;
+    } else {
+        classNameString = "columns-1 gap-6 space-y-6 w-full sm:columns-2 lg:columns-3";
+        productEntries.forEach((item) => {
+            const product_name = DOMPurify.sanitize(item.fields.Product_Name);
+            const product_description = DOMPurify.sanitize(item.fields.Product_Description);
+            const product_price = DOMPurify.sanitize(item.fields.Product_Price);            
+
+            htmlString += `
+            <div class="break-inside-avoid mb-6">
+                <div class="retro-card">
+                    <div class="retro-card-header">
+                        <h3 class="retro-font text-xl mb-1">${product_name}</h3>
+                    </div>
+                    <div class="p-4">
+                        <div class="bg-white border-2 border-pink-400 rounded-lg p-3 mb-3">
+                            <p class="retro-font text-pink-500 font-bold mb-1">Price:</p>
+                            <p class="retro-font text-lg">Rp ${product_price}</p>
+                        </div>
+                        <div class="bg-white border-2 border-pink-400 rounded-lg p-3">
+                            <p class="retro-font text-pink-500 font-bold mb-1">Description:</p>
+                            <p class="retro-font">${product_description}</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-end p-4 border-t-2 border-pink-400">
+                        <a href="/edit-product/${item.pk}" class="retro-button mr-2">
+                            Edit
+                        </a>
+                        <a href="/delete/${item.pk}" class="retro-button retro-delete-button">
+                            Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+            `;
+        });
+    }    
+    document.getElementById("product_entry_cards").className = classNameString;
+    document.getElementById("product_entry_cards").innerHTML = htmlString;
+    document.getElementById("submitProductEntry").onclick = addProductEntry;
+}
+
+function addProductEntry() {
+    fetch("{% url 'main:add_product_entry_ajax' %}", {
+        method: "POST",
+        body: new FormData(document.querySelector('#productForm')),
+    })
+    .then(response => {
+        if (response.ok) {
+            return refreshProductEntries();
+        }
+        throw new Error('Network response was not ok.');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+    document.getElementById("productForm").reset();
+    hideModal();
+    return false;
+}
+
+function showModal() {
+    const modal = document.getElementById('crudModal');
+    const modalContent = document.getElementById('crudModalContent');
+
+    modal.classList.remove('hidden'); 
+    setTimeout(() => {
+        modalContent.classList.remove('opacity-0', 'scale-95');
+        modalContent.classList.add('opacity-100', 'scale-100');
+    }, 50); 
+}
+
+function hideModal() {
+    const modal = document.getElementById('crudModal');
+    const modalContent = document.getElementById('crudModalContent');
+
+    modalContent.classList.remove('opacity-100', 'scale-100');
+    modalContent.classList.add('opacity-0', 'scale-95');
+
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 150); 
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    refreshProductEntries();
+    
+    const productForm = document.getElementById("productForm");
+    if (productForm) {
+        productForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            addProductEntry();
+        });
+    }
+});
+</script>
 {% endblock content %}
