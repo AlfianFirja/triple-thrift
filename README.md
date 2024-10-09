@@ -546,3 +546,45 @@ Buat fungsi baru dalam file `views.py` lalu jangan lupa diimport di `url.py` lal
 - 2. Siapkan gambarnya di suatu direktori atau gunakan url dari internet. nanti di letakkan di tempat yang diinginkan
 - 3. Siapkan template untuk tiap card nya, lalu panggil di `main.html`
 - 4. Sediakan file `navbar.html` yang berisikan template untuk navbarnya yang bisa dipanggil di `main.html`. Namun pada tugas ini hanya terdapat tombol logout nya saja, sisanya cuma tulisan.
+
+---
+
+## Tugas 6
+
+---
+
+### 1. Jelaskan manfaat dari penggunaan JavaScript dalam pengembangan aplikasi web!
+- **Interaktif**: JavaScript memungkinkan interaksi dinamis di halaman web tanpa perlu memuat ulang halaman secara penuh. Ini meningkatkan pengalaman pengguna dengan membuat aplikasi lebih responsif.
+- **Manipulasi DOM**: JavaScript dapat memodifikasi elemen pada halaman web secara langsung melalui DOM (Document Object Model), memungkinkan perubahan konten dan tampilan tanpa harus mengunduh ulang halaman dari server.
+- **Pengolahan Data Asinkron (AJAX)**: Dengan JavaScript, data dapat diambil dari server secara asinkron menggunakan teknik seperti `fetch()` atau `XMLHttpRequest`, sehingga halaman web tetap interaktif meskipun sedang mengambil data dari server di latar belakang.
+- **Penggunaan di Backend (Node.js)**: Selain di frontend, JavaScript juga digunakan di backend menggunakan framework seperti Node.js, memungkinkan pengembang untuk menggunakan satu bahasa di kedua sisi aplikasi.
+- **Ekosistem yang Luas**: JavaScript memiliki banyak pustaka dan framework, seperti React, Vue, dan Angular, yang membantu pengembangan aplikasi web lebih cepat dan efisien.
+
+### 2. Jelaskan fungsi dari penggunaan await ketika kita menggunakan fetch()! Apa yang akan terjadi jika kita tidak menggunakan await?
+`await` digunakan untuk menunggu penyelesaian (completion) dari promise yang dihasilkan oleh `fetch()`. Karena `fetch()` bekerja secara asinkron dan mengembalikan promise, `await` memastikan bahwa JavaScript menunggu hasil dari `fetch()` sebelum melanjutkan ke baris kode berikutnya.
+
+Jika kita tidak menggunakan `await`, kode akan melanjutkan eksekusi tanpa menunggu hasil dari `fetch()`, sehingga kita mungkin mencoba memproses data sebelum data tersebut diterima, yang dapat menyebabkan error atau perilaku tak terduga.
+
+Contoh tanpa `await`:
+```javascript
+let response = fetch('https://api.example.com/data');
+console.log(response); // Ini akan mencetak promise, bukan hasil data
+```
+
+Dengan `await`:
+```javascript
+let response = await fetch('https://api.example.com/data');
+console.log(response); // Ini akan mencetak hasil data setelah fetch selesai
+```
+
+### 3. Mengapa kita perlu menggunakan decorator csrf_exempt pada view yang akan digunakan untuk AJAX POST? 
+Django secara default menggunakan mekanisme CSRF (Cross-Site Request Forgery) untuk melindungi aplikasi dari serangan dengan cara mencegah pengiriman request yang tidak sah. Pada AJAX POST, CSRF token harus disertakan untuk memastikan bahwa permintaan tersebut berasal dari sumber yang sah.
+
+Namun, jika pada view tersebut tidak ada penanganan CSRF token, atau kita secara khusus ingin mengecualikan view tersebut dari pemeriksaan CSRF, maka kita menggunakan decorator `csrf_exempt`. Ini memungkinkan AJAX POST untuk berjalan tanpa verifikasi CSRF, walaupun ini harus digunakan dengan hati-hati karena dapat mengurangi keamanan aplikasi.
+
+### 4. Pada tutorial PBP minggu ini, pembersihan data input pengguna dilakukan di belakang (backend) juga. Mengapa hal tersebut tidak dilakukan di frontend saja?
+- Keamanan: Validasi dan pembersihan data hanya di frontend dapat dimanipulasi oleh pengguna yang jahat. Pengguna dapat mematikan validasi JavaScript di browser dan mengirim data yang berbahaya langsung ke server.
+- Konsistensi: Backend memastikan bahwa aturan validasi diterapkan secara konsisten, tanpa bergantung pada implementasi di berbagai browser.
+- Penegakan Aturan Bisnis: Banyak aturan validasi yang lebih kompleks (seperti otentikasi, hak akses, dan validasi terkait database) yang harus diproses di server.
+
+Frontend hanya digunakan untuk memberikan pengalaman pengguna yang lebih baik dengan validasi cepat sebelum data dikirim, namun backend tetap menjadi lapisan terakhir dalam memastikan integritas dan keamanan data.
