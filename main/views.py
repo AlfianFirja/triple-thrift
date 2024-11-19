@@ -9,11 +9,13 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import datetime
-from django.http import HttpResponseRedirect
+import json
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils.html import strip_tags
+from django.contrib.auth import logout as auth_logout
 
 @login_required(login_url='/login')
 def show_main(request):
@@ -61,11 +63,11 @@ def add_product_entry_ajax(request):
     
 
 def edit_product(request, id):
-    # Get mood entry berdasarkan id
-    mood = ProductEntry.objects.get(pk = id)
+    # Get product entry berdasarkan id
+    product = ProductEntry.objects.get(pk = id)
 
-    # Set mood entry sebagai instance dari form
-    form = ProductForm(request.POST or None, instance=mood)
+    # Set product entry sebagai instance dari form
+    form = ProductForm(request.POST or None, instance=product)
 
     if form.is_valid() and request.method == "POST":
         # Simpan form dan kembali ke halaman awal
@@ -76,9 +78,9 @@ def edit_product(request, id):
     return render(request, "edit_product.html", context)
 
 def delete_product(request, id):
-    # Get mood berdasarkan id
+    # Get product berdasarkan id
     product = ProductEntry.objects.get(pk = id)
-    # Hapus mood
+    # Hapus product
     product.delete()
     # Kembali ke halaman awal
     return HttpResponseRedirect(reverse('main:show_main'))
@@ -134,3 +136,38 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('main:login'))
     response.delete_cookie('last_login')
     return response
+
+@csrf_exempt
+def create_product_flutter(request):
+    if request.method == 'POST':
+
+        data = json.loads(request.body)
+        new_product = ProductEntry.objects.create(
+            user=request.user,
+            Product_Name=data["product"],
+            Product_Description=data["description"],
+            Product_Price=int(data["price"]),
+        )
+
+        new_product.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+    
+@csrf_exempt
+def logout(request):
+    username = request.user.username
+
+    try:
+        auth_logout(request)
+        return JsonResponse({
+            "username": username,
+            "status": True,
+            "message": "Logout berhasil!"
+        }, status=200)
+    except:
+        return JsonResponse({
+        "status": False,
+        "message": "Logout gagal."
+        }, status=401)

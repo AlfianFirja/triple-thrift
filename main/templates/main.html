@@ -177,7 +177,6 @@ async function refreshProductEntries() {
     document.getElementById("product_entry_cards").innerHTML = htmlString;
     document.getElementById("submitProductEntry").onclick = addProductEntry;
 }
-
 function addProductEntry() {
     fetch("{% url 'main:add_product_entry_ajax' %}", {
         method: "POST",
